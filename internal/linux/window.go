@@ -210,7 +210,12 @@ func (b *Backend) NewWindow(o *platform.WindowOptions, h platform.WindowHandler)
 	w.minW, w.minH = int32(o.MinSize.Width), int32(o.MinSize.Height)
 	w.maxW, w.maxH = int32(o.MaxSize.Width), int32(o.MaxSize.Height)
 	w.applyGeometry()
-	if o.Transparent {
+	// A transparent window, and one whose page rounds its own corners, paint
+	// their own background: both need a surface with an alpha channel, and
+	// neither wants the background GTK draws for them, which is square. The
+	// decorations stay, whatever the theme draws around a window, around the
+	// shape the page cuts.
+	if o.Transparent || o.CornerRadius > 0 {
 		if visual := gdkScreenGetRGBAVisual(gtkWidgetGetScreen(w.win)); visual != 0 {
 			gtkWidgetSetVisual(w.win, visual)
 		}

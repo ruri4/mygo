@@ -162,7 +162,9 @@ type WindowOptions struct {
 	// Transparent: its BackgroundColor fills its content, inside the
 	// corners. Windows 11 rounds a
 	// frameless window given one with the corners of its own windows,
-	// whatever the radius; Linux does not round it.
+	// whatever the radius. Linux gives the surface an alpha channel for
+	// it, so the corners the page cuts show what lies behind them, and
+	// keeps the decorations GTK draws around that shape.
 	CornerRadius int
 	// Opacity of the window between 0 and 1 (default 1).
 	Opacity float64

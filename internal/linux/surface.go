@@ -230,7 +230,7 @@ func (s *surface) newArea(gl bool) {
 		// channel GTK keeps the area in a texture it blends, rather than in
 		// a renderbuffer it copies, which took a small window 50 MB more of
 		// the GPU's memory, and an animation half as much CPU again.
-		gtkGLAreaSetHasAlpha(s.area, s.w.opts.Transparent)
+		gtkGLAreaSetHasAlpha(s.area, s.w.opts.Transparent || s.w.opts.CornerRadius > 0)
 		// GTK keeps the area's last frame as it paints the window, and
 		// renders it again only as the content asks (queueDraw): rendering
 		// on every paint, its default, built a frame for each one a web view
@@ -526,6 +526,11 @@ func (s *surface) PresentPixels(pix []byte, stride, width, height int) {
 	op := int32(operatorSource)
 	if s.layers != 0 {
 		op = operatorOver // over the web views, which holes show
+	} else if s.w.opts.CornerRadius > 0 {
+		// Over what GTK drew around the page, the decorations and the
+		// background it fills the corners the page cuts with: SOURCE would
+		// wipe them out with the page's own transparent pixels.
+		op = operatorOver
 	}
 	cairoSetOperator(s.cr, op)
 	cairoPaint(s.cr)

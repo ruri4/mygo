@@ -366,7 +366,8 @@ type WindowOptions struct {
 	Vibrancy             string
 	// CornerRadius rounds a frameless window's corners, in DIPs: its
 	// content and material are cut to them (macOS), or the system rounds
-	// it with its own corners (Windows 11).
+	// it with its own corners (Windows 11). On Linux the page cuts them
+	// itself, and the window keeps the decorations GTK draws around them.
 	CornerRadius int
 	Opacity      float64
 	Parent       Window
